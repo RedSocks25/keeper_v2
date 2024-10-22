@@ -5,7 +5,7 @@ from pathlib import Path
 SRC_PATH = Path(__file__).resolve().parent.parent
 
 paths: dict[str, Path] = {
-  "USERS_DB": SRC_PATH / 'database' / 'users.json'
+  "USERS_DB": SRC_PATH / 'database' / 'accounts_db.json'
 }
 
 
