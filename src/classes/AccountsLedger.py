@@ -34,9 +34,9 @@ class AccountsLedger:
   # Option 3
   def add_account(self):
     platform = input('Enter the platform: ')
-    username = input('Enter the username: ')
-    password = input('Enter the password: ')
     email = input('Enter the email: ')
+    password = input('Enter the password: ')
+    username = input('Enter the username (Press [ENTER] if not): ')
 
     account = {
       'platform': platform,
@@ -45,10 +45,7 @@ class AccountsLedger:
       'email': email
     }
 
-    if account['platform'] in self.accounts:
-      self.accounts[account['platform']].append(account)
-    else:
-      self.accounts[account['platform']] = [account]
+    self.accounts.setdefault(platform, []).append(account)
   
 
   # Option 4
@@ -84,3 +81,4 @@ class AccountsLedger:
     choice = int(input('Enter the account number to delete: '))
     del self.accounts[platform][choice-1]
   
+  # Save option asynchroneously in file
