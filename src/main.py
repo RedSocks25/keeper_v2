@@ -38,18 +38,37 @@ def load_accounts_to_hash_table(accounts: list[dict]) -> dict[str, list[Account]
   return accounts_hash_table
 
 
-# TODO: Create a function to unhash the accounts for saving in a standard JSON format
-def unhash_accoutns():
-  pass
-
+def unhash_accoutns(accounts: dict[str, list[Account]]) -> list[Account]:
+  unhashed_accounts: list[Account] = []
+  
+  for platform, accounts_list in accounts.items():
+    for account in accounts_list:
+      unhashed_accounts.append(account)
+  
+  return unhashed_accounts
+  
 
 def clear_console():
   os.system('cls' if os.name == 'nt' else 'clear')
 
 
+def save_user_accounts(username: str, accounts: dict[str, list[Account]]):
+  with open(paths['USERS_DB'], 'r') as users_json:
+    users: dict = json.load(users_json)['users']
+  
+  for user in users:
+    if user['username'] == username:
+      user['accounts'] = unhash_accoutns(accounts)
+      break
+  
+  with open(paths['USERS_DB'], 'w') as users_json:
+    json.dump({'users': users}, users_json, indent=2)
+  
+  return None
+
+
 # TODO: Move this function to a separate file or folder
-def login(username: str) -> AccountsLedger:
-  # Find the username at ./src/database/users.json
+def login(username: str) -> User:
   user: User = check_user(username)
   if not user:
     return None
@@ -58,30 +77,28 @@ def login(username: str) -> AccountsLedger:
   
   while True:
     password = input(f'Enter the password for {username}: ')
-
     if password == user['password']:
       break
     else:
       print('Incorrect password. Please try again or click [Ctrl + C] to.')
-    
-  user_accounts: dict = load_accounts_to_hash_table(user['accounts'])
 
-  return AccountsLedger(user['username'], user_accounts)
+  return user
     
   
 def main():
   clear_console()
   args = parser.parse_args()
   
-  ledger: Union[AccountsLedger | None] = None
-  
+  active_user: Union[User | None] = None
   if args.login:
-    ledger: AccountsLedger = login(args.login)
+    active_user = login(args.login)
   
-  if not ledger:
+  if not active_user:
     print('User not found. Exiting...')
     return None
   
+  ledger = AccountsLedger(active_user['username'], load_accounts_to_hash_table(active_user['accounts']))
+
   clear_console()
   
   while True:
@@ -95,8 +112,6 @@ def main():
     option = input('\nEnter your choice: ')
 
     clear_console()
-
-    # TODO: Implement the simulation of a switch-case statement instead
     
     # Show all accounts
     if option == '1':
@@ -110,16 +125,20 @@ def main():
     # Add an account
     elif option == '3':
       ledger.add_account()
+      save_user_accounts(ledger.username, ledger.accounts)
     
     # Edit an account
     elif option == '4':
       platform = input('Enter the platform: ')
       ledger.edit_account(platform)
+      save_user_accounts(ledger.username, ledger.accounts)
 
     # Remove an account
     elif option == '5':
       platform = input('Enter the platform: ')      
       ledger.remove_account(platform)
+      save_user_accounts(ledger.username, ledger.accounts)
+      
 
     # Exit
     elif option == '6':

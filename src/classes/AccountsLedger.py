@@ -65,14 +65,16 @@ class AccountsLedger:
     # TODO: Review this code to handle invalid inputs
     choice = int(input('Enter the account number to edit: '))
 
+    edit_account = self.accounts[platform][choice-1]
+
     # TODO: This code should able the user to change the platform name and if so, update the hashmap key or append the account to the new platform or an existing one
     new_username = input('Enter the new username: ')
     new_password = input('Enter the new password: ')
     new_email = input('Enter the new email: ')
     
-    self.accounts[platform][choice-1]['username'] = new_username
-    self.accounts[platform][choice-1]['password'] = new_password
-    self.accounts[platform][choice-1]['email'] = new_email
+    self.accounts[platform][choice-1]['username'] = new_username if new_username else edit_account['username']
+    self.accounts[platform][choice-1]['password'] = new_password if new_password else edit_account['password']
+    self.accounts[platform][choice-1]['email'] = new_email if new_email else edit_account['email']
 
   
   # Option 5
@@ -88,8 +90,3 @@ class AccountsLedger:
     
     choice = int(input('Enter the account number to delete: '))
     del self.accounts[platform][choice-1]
-  
-  # Save option asynchroneously in file
-  def save(self):
-    # TODO: Implement this method to save the accounts in a file
-    pass

@@ -5,12 +5,6 @@
       "password": "admin",
       "accounts": [
         {
-          "platform": "facebook",
-          "username": "admin",
-          "password": "admin",
-          "email": "admin@admin.com"
-        },
-        {
           "platform": "twitter",
           "username": "admin",
           "password": "admin",
@@ -19,14 +13,8 @@
         {
           "platform": "instagram",
           "username": "admin",
-          "password": "admin",
-          "email": "admin@admin.com"
-        },
-        {
-          "platform": "Google",
-          "username": "admin",
-          "password": "admin",
-          "email": "admin@admin.com"
+          "password": "admin123$",
+          "email": "admin@hotmail.com"
         },
         {
           "platform": "Google",
@@ -41,10 +29,10 @@
       "password": "user",
       "accounts": [
         {
-          "platform": "facebook",
+          "platform": "Instagram",
           "username": "user",
-          "password": "user",
-          "email": "user@user.com"
+          "password": "superuser",
+          "email": "user@gmail.com"
         }
       ]
     }
