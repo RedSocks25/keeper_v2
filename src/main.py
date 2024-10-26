@@ -1,5 +1,6 @@
 import argparse
 import json
+import os
 
 from typing import Union
 from pprint import pprint
@@ -36,11 +37,17 @@ def load_accounts_to_hash_table(accounts: list[dict]) -> dict[str, list[Account]
   return accounts_hash_table
 
 
+def clear_console():
+  os.system('cls' if os.name == 'nt' else 'clear')
+
+
 def login(username: str) -> AccountsLedger:
   # Find the username at ./src/database/users.json
   user: User = check_user(username)
   if not user:
     return None
+  
+  print(f'Welcome to your accounts ledger, {username}!')
   
   while True:
     password = input(f'Enter the password for {username}: ')
@@ -56,10 +63,11 @@ def login(username: str) -> AccountsLedger:
     
   
 def main():
+  clear_console()
+  args = parser.parse_args()
+  
   ledger: Union[AccountsLedger | None] = None
   
-  args = parser.parse_args()
-
   if args.login:
     ledger: AccountsLedger = login(args.login)
   
@@ -67,46 +75,53 @@ def main():
     print('User not found. Exiting...')
     return None
   
+  clear_console()
+  
   while True:
-    print('Welcome to the Accounts Ledger')
-    print('Choose an option:')
+    print(f"--- {ledger.username}'s Accounts Ledger ---\n")
     print('1. List all accounts')
     print('2. List accounts by platform')
     print('3. Add an account')
-    print('4. Remove an account')
-    print('5. Exit')
-    option = input('Enter your choice: ')
+    print('4. Edit an account')
+    print('5. Remove an account')
+    print('6. Exit')
+    option = input('\nEnter your choice: ')
+
+    clear_console()
     
+    # Show all accounts
     if option == '1':
       ledger.show_all_accounts()
+
+    # Show accounts by platform given
     elif option == '2':
       platform = input('Enter the platform: ')
-      if platform in ledger.accounts:
-        pprint(ledger.accounts[platform])
-      else:
-        print('No accounts found for this platform')
+      ledger.show_platform_accounts(platform)
+    
+    # Add an account
     elif option == '3':
-      platform = input('Enter the platform: ')
-      username = input('Enter the username: ')
-      password = input('Enter the password: ')
-      email = input('Enter the email: ')
-      account = Account(platform=platform, username=username, password=password, email=email)
-      if platform in ledger.accounts:
-        ledger.accounts[platform].append(account)
-      else:
-        ledger.accounts[platform] = [account]
+      ledger.add_account()
+    
+    # Edit an account
     elif option == '4':
       platform = input('Enter the platform: ')
-      username = input('Enter the username: ')
-      for account in ledger.accounts[platform]:
-        if account.username == username:
-          ledger.accounts[platform].remove(account)
-          break
+      ledger.edit_account(platform)
+
+    # Remove an account
     elif option == '5':
+      platform = input('Enter the platform: ')      
+      ledger.remove_account(platform)
+
+    # Exit
+    elif option == '6':
       print('Exiting...')
       break
     else:
       print('Invalid option. Please try again.')
+    
+    # Wait until user presses enter
+    input('\nPress [Enter] to continue...')
+    clear_console()
   
   return None
 

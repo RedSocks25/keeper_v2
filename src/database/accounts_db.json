@@ -35,6 +35,18 @@
           "email": "admin@gmail.com"
         }
       ]
+    },
+    {
+      "username": "user",
+      "password": "user",
+      "accounts": [
+        {
+          "platform": "facebook",
+          "username": "user",
+          "password": "user",
+          "email": "user@user.com"
+        }
+      ]
     }
   ]
 }
