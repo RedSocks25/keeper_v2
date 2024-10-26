@@ -11,6 +11,8 @@ from classes import AccountsLedger
 from constants import paths
 
 
+# TODO: Add docstrings to the functions
+
 def check_user(username: str) -> bool:
   # Find the username at ./src/database/users.json
   with open(paths['USERS_DB'], 'r') as users_json:
@@ -24,7 +26,6 @@ def check_user(username: str) -> bool:
 
 
 def load_accounts_to_hash_table(accounts: list[dict]) -> dict[str, list[Account]]:
-
   accounts_hash_table: dict[str, list[Account]] = {}
 
   for account in accounts:
@@ -37,10 +38,16 @@ def load_accounts_to_hash_table(accounts: list[dict]) -> dict[str, list[Account]
   return accounts_hash_table
 
 
+# TODO: Create a function to unhash the accounts for saving in a standard JSON format
+def unhash_accoutns():
+  pass
+
+
 def clear_console():
   os.system('cls' if os.name == 'nt' else 'clear')
 
 
+# TODO: Move this function to a separate file or folder
 def login(username: str) -> AccountsLedger:
   # Find the username at ./src/database/users.json
   user: User = check_user(username)
@@ -88,6 +95,8 @@ def main():
     option = input('\nEnter your choice: ')
 
     clear_console()
+
+    # TODO: Implement the simulation of a switch-case statement instead
     
     # Show all accounts
     if option == '1':

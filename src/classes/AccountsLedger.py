@@ -13,15 +13,17 @@ class AccountsLedger:
 
   # Option 1
   def show_all_accounts(self):
+    print(' --- [All your accounts] --- \n')
     for platform, accounts in self.accounts.items():
-      print(f'ACCOUNTS FROM {platform}')
+      print(f'{platform} accounts')
       for i, account in enumerate(accounts):
-        print(f'{i+1}. {account["username"]} | {account["email"]} | {account["password"]}')
+        print(f'\t{i+1}. {account["username"]} | {account["email"]} | {account["password"]}')
       print()
   
 
   # Option 2
   def show_platform_accounts(self, platform: str):
+    print(f' --- [{platform} related accounts] --- \n')
     platform_accounts = self.accounts.get(platform, [])
     if len(platform_accounts) == 0:
       print('No accounts found for this platform')
@@ -33,6 +35,7 @@ class AccountsLedger:
 
   # Option 3
   def add_account(self):
+    print(' --- [Add new account] --- \n')
     platform = input('Enter the platform: ')
     email = input('Enter the email: ')
     password = input('Enter the password: ')
@@ -40,7 +43,7 @@ class AccountsLedger:
 
     account = {
       'platform': platform,
-      'username': username,
+      'username': username if username else 'no-username',
       'password': password,
       'email': email
     }
@@ -50,6 +53,7 @@ class AccountsLedger:
 
   # Option 4
   def edit_account(self, platform: str):
+    print(' --- [Edit account] --- \n')
     platform_accounts = self.accounts.get(platform, [])
     if len(platform_accounts) == 0:
       print('No accounts found for this platform')
@@ -58,7 +62,10 @@ class AccountsLedger:
     for i, account in enumerate(platform_accounts):
       print(f'{i+1}. {account["username"]} | {account["email"]} | {account["password"]}')
     
+    # TODO: Review this code to handle invalid inputs
     choice = int(input('Enter the account number to edit: '))
+
+    # TODO: This code should able the user to change the platform name and if so, update the hashmap key or append the account to the new platform or an existing one
     new_username = input('Enter the new username: ')
     new_password = input('Enter the new password: ')
     new_email = input('Enter the new email: ')
@@ -70,6 +77,7 @@ class AccountsLedger:
   
   # Option 5
   def remove_account(self, platform: str):
+    print(' --- [Remove account] --- \n')
     platform_accounts = self.accounts.get(platform, [])
     if len(platform_accounts) == 0:
       print('No accounts found for this platform')
@@ -82,3 +90,6 @@ class AccountsLedger:
     del self.accounts[platform][choice-1]
   
   # Save option asynchroneously in file
+  def save(self):
+    # TODO: Implement this method to save the accounts in a file
+    pass
