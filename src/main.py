@@ -9,23 +9,12 @@ from config import parser
 from models import User, Account
 from classes import AccountsLedger
 from constants import paths
+from utils import login
 
 
 # TODO: Add docstrings to the functions
 
-def check_user(username: str) -> bool:
-  # Find the username at ./src/database/users.json
-  with open(paths['USERS_DB'], 'r') as users_json:
-    users: dict = json.load(users_json)['users']
-  
-  # Check if the username exists in users
-  for user in users:
-    if user['username'] == username:
-      return User(**user)
-  return None
-
-
-def load_accounts_to_hash_table(accounts: list[dict]) -> dict[str, list[Account]]:
+def hash_accounts(accounts: list[dict]) -> dict[str, list[Account]]:
   accounts_hash_table: dict[str, list[Account]] = {}
 
   for account in accounts:
@@ -38,7 +27,7 @@ def load_accounts_to_hash_table(accounts: list[dict]) -> dict[str, list[Account]
   return accounts_hash_table
 
 
-def unhash_accoutns(accounts: dict[str, list[Account]]) -> list[Account]:
+def unhash_accounts(accounts: dict[str, list[Account]]) -> list[Account]:
   unhashed_accounts: list[Account] = []
   
   for platform, accounts_list in accounts.items():
@@ -58,31 +47,13 @@ def save_user_accounts(username: str, accounts: dict[str, list[Account]]):
   
   for user in users:
     if user['username'] == username:
-      user['accounts'] = unhash_accoutns(accounts)
+      user['accounts'] = unhash_accounts(accounts)
       break
   
   with open(paths['USERS_DB'], 'w') as users_json:
     json.dump({'users': users}, users_json, indent=2)
   
   return None
-
-
-# TODO: Move this function to a separate file or folder
-def login(username: str) -> User:
-  user: User = check_user(username)
-  if not user:
-    return None
-  
-  print(f'Welcome to your accounts ledger, {username}!')
-  
-  while True:
-    password = input(f'Enter the password for {username}: ')
-    if password == user['password']:
-      break
-    else:
-      print('Incorrect password. Please try again or click [Ctrl + C] to.')
-
-  return user
     
   
 def main():
@@ -97,7 +68,7 @@ def main():
     print('User not found. Exiting...')
     return None
   
-  ledger = AccountsLedger(active_user['username'], load_accounts_to_hash_table(active_user['accounts']))
+  ledger = AccountsLedger(active_user['username'], hash_accounts(active_user['accounts']))
 
   clear_console()
   
